@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Essenza Parfums | Fragancias que dejan huella</title>
+    <meta name="description" content="Descubrí las fragancias de Essenza Parfums. Perfumes originales, envíos a todo el país y atención personalizada.">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll(".productos-carrusel").forEach((carousel) => {
+                const track = carousel.querySelector(".productos");
+                const previousButton = carousel.querySelector(".carrusel-anterior");
+                const nextButton = carousel.querySelector(".carrusel-siguiente");
+                const originalProducts = Array.from(track.querySelectorAll(".producto"));
+                let loopDistance = 0;
+                let normalizeTimeout;
+
+                const updateButtons = () => {
+                    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+                    const productsWidth = originalProducts.reduce(
+                        (width, product) => width + product.getBoundingClientRect().width,
+                        0
+                    ) + (originalProducts.length - 1) * gap;
+                    const hasOverflow = productsWidth > track.clientWidth + 1;
+                    previousButton.disabled = !hasOverflow;
+                    nextButton.disabled = !hasOverflow;
+
+                    track.querySelectorAll(".producto-clonado").forEach((clone) => clone.remove());
+                    track.classList.remove("carrusel-continuo");
+                    loopDistance = 0;
+
+                    if (hasOverflow && originalProducts.length) {
+                        originalProducts.forEach((product) => {
+                            const clone = product.cloneNode(true);
+                            clone.classList.add("producto-clonado");
+                            clone.setAttribute("aria-hidden", "true");
+                            clone.querySelectorAll("a, button, [tabindex]").forEach((element) => {
+                                element.setAttribute("tabindex", "-1");
+                            });
+                            track.appendChild(clone);
+                        });
+                        track.classList.add("carrusel-continuo");
+                        loopDistance = track.querySelector(".producto-clonado")
+                            .getBoundingClientRect().left - originalProducts[0].getBoundingClientRect().left;
+                    }
+                };
+
+                const normalizePosition = () => {
+                    window.clearTimeout(normalizeTimeout);
+                    if (loopDistance && track.scrollLeft >= loopDistance - 1) {
+                        track.scrollLeft -= loopDistance;
+                    }
+                };
+
+                const scrollByProduct = (direction) => {
+                    if (previousButton.disabled || !originalProducts.length) return;
+
+                    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+                    const step = originalProducts[0].getBoundingClientRect().width + gap;
+                    let current = track.scrollLeft;
+
+                    if (direction < 0 && current <= 1 && loopDistance) {
+                        track.scrollLeft = loopDistance;
+                        current = loopDistance;
+                    }
+
+                    track.scrollTo({ left: current + direction * step, behavior: "smooth" });
+                    window.clearTimeout(normalizeTimeout);
+                    normalizeTimeout = window.setTimeout(normalizePosition, 700);
+                };
+
+                previousButton.addEventListener("click", () => scrollByProduct(-1));
+                nextButton.addEventListener("click", () => scrollByProduct(1));
+                track.addEventListener("scroll", () => {
+                    window.clearTimeout(normalizeTimeout);
+                    normalizeTimeout = window.setTimeout(normalizePosition, 700);
+                }, { passive: true });
+                window.addEventListener("resize", () => {
+                    track.scrollLeft = 0;
+                    updateButtons();
+                });
+                updateButtons();
+            });
+        });
+    </script>
+</head>
+
+<body>
+
+    <!-- BARRA DE NAVEGACIÓN -->
+    <header class="navbar">
+        <a href="#inicio" class="logo-container">
+            <img src="IMG/LOGO-ESSENZA-2.png"
+                 alt="Essenza Parfums"
+                 class="logo">
+        </a>
+
+        <button class="menu-toggle"
+                id="menu-toggle"
+                aria-label="Abrir menú"
+                aria-expanded="false"
+                aria-controls="nav-menu">
+            ☰
+        </button>
+
+        <nav class="nav-menu" id="nav-menu">
+            <a href="#inicio" class="activo">INICIO</a>
+            <a href="#catalogo">CATÁLOGO</a>
+            <a href="#nosotros">NOSOTROS</a>
+            <a href="#contacto">CONTACTO</a>
+        </nav>
+
+        <div class="nav-icons">
+            <a href="#catalogo" aria-label="Buscar perfumes">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="10.8" cy="10.8" r="6.8"></circle>
+                    <path d="m16 16 5 5"></path>
+                </svg>
+            </a>
+
+            <a href="#catalogo" aria-label="Ver catálogo">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 8h14l1 13H4L5 8Z"></path>
+                    <path d="M9 8V5a3 3 0 0 1 6 0v3"></path>
+                </svg>
+            </a>
+        </div>
+    </header>
+
+
+    <!-- PORTADA PRINCIPAL -->
+    <main>
+
+        <section class="hero" id="inicio">
+
+            <div class="hero-overlay"></div>
+           
+            <div class="hero-content">
+          
+              <!-- //LOGO SUPERPUESTO// -->
+              <img src="IMG/LOGO-ESSENZA-2.png"
+                     alt="Logo de Essenza Parfums"
+                     class="hero-logo">
+
+                <p class="frase">
+                    FRAGANCIAS QUE DEJAN HUELLA
+                </p>
+
+                <a href="#catalogo" class="boton-catalogo">
+                    VER CATÁLOGO
+                    <span>→</span>
+                </a>
+
+            </div>
+
+            <!-- BENEFICIOS LATERALES -->
+            <aside class="beneficios">
+
+                <div class="beneficio">
+                    <span class="beneficio-icono">♢</span>
+                    <p>PRODUCTOS<br>100% ORIGINALES</p>
+                </div>
+
+                <div class="beneficio">
+                    <span class="beneficio-icono">♧</span>
+                    <p>ENVÍOS A<br>TODO EL PAÍS</p>
+                </div>
+
+                <div class="beneficio">
+                    <span class="beneficio-icono">♙</span>
+                    <p>COMPRA<br>SEGURA</p>
+                </div>
+
+            </aside>
+
+            <div class="ubicacion">
+                <span></span>
+                <p>⌖ &nbsp; Suardi, Santa Fe</p>
+                <span></span>
+            </div>
+
+        </section>
+
+
+        <!-- CATÁLOGO -->
+        <section class="catalogo seccion" id="catalogo">
+
+            <p class="subtitulo">DESCUBRÍ TU ESENCIA</p>
+            <h2>Nuestros Productos</h2>
+
+            <p class="descripcion">
+                Encontrá la fragancia ideal para cada momento.
+            </p>
+
+            <h3 class="titulo-categoria">ÁRABES</h3>
+            <div class="productos-carrusel" role="region" aria-label="Carrusel de perfumes árabes">
+                <div class="carrusel-controles">
+                    <button class="carrusel-boton carrusel-anterior"
+                            type="button"
+                            aria-label="Ver perfumes anteriores"
+                            aria-controls="productos">
+                        ←
+                    </button>
+                    <button class="carrusel-boton carrusel-siguiente"
+                            type="button"
+                            aria-label="Ver más perfumes"
+                            aria-controls="productos">
+                        →
+                    </button>
+                </div>
+
+                <div class="productos" id="productos" tabindex="0" aria-label="Perfumes disponibles">
+
+                <article class="producto">
+                    <div class="producto-visual" tabindex="0" aria-label="9PM Night Out. Fragancia intensa y envolvente, ideal para salidas y ocasiones especiales.">
+                        <div class="producto-giro">
+                            <div class="producto-imagen imagen-1" aria-hidden="true"></div>
+                            <div class="producto-reverso" aria-hidden="true">
+                                <h3>9PM Night Out</h3>
+                               <p>Extrait de Parfum - 100 ml</p> <br>Para quienes buscan una fragancia intensa y envolvente, ideal para salidas y ocasiones especiales.
+                               <p>(UNISEX)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Afnan 9PM Night Out</h3>
+                    <p>$120.000</p>
+                    <a href="#contacto" class="boton-secundario">
+                       ENCARGAR
+                    </a>
+                </article>
+
+                <article class="producto">
+                    <div class="producto-visual" tabindex="0" aria-label="French Avenue Liquid Brun Eau de Parfum, 100 ml. Una fragancia con personalidad.">
+                        <div class="producto-giro">
+                            <div class="producto-imagen imagen-2" aria-hidden="true"></div>
+                            <div class="producto-reverso" aria-hidden="true">
+                                <h3>Liquid Brun</h3>
+                                <p>Eau de Parfum - 100 ml</p><br>Para quienes buscan una fragancia dulce con personalidad.</p>
+                                <p>(HOMBRE-UNISEX)</p>
+                             
+                            </div>
+                        </div>
+                    </div>
+                    <h3>French Avenue Liquid Brun</h3>
+                    <p>$108.000</p>
+                    <a href="#contacto" class="boton-secundario">
+                        ENCARGAR
+                    </a>
+                </article>
+
+                <article class="producto">
+                    <div class="producto-visual" tabindex="0" aria-label="Fragancia unisex versátil, para acompañar distintos momentos del día.">
+                        <div class="producto-giro">
+                            <div class="producto-imagen imagen-3" aria-hidden="true"></div>
+                            <div class="producto-reverso" aria-hidden="true">
+                                <h3> Supremacy Collector's Edition</h3>
+                                <p> Eau de Parfum - 100 ml</p> <br>Para quienes buscan una fragancia con carácter, versatilidad y frescura
+                                <p>(HOMBRE-UNISEX)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Afnan Supremacy Collector's Edition</h3>
+                    <p>$140.000</p>
+                    <a href="#contacto" class="boton-secundario">
+                       ENCARGAR
+                    </a>
+                </article>
+
+                <article class="producto">
+                    <div class="producto-visual" tabindex="0" aria-label="Fragancia unisex versátil, para acompañar distintos momentos del día.">
+                        <div class="producto-giro">
+                            <div class="producto-imagen imagen-4" aria-hidden="true"></div>
+                            <div class="producto-reverso" aria-hidden="true">
+                                <h3>Ghost Spectre</h3>
+                                <p>Eau de Parfum - 100ml</p> <br>Para quienes buscan destacar con un aroma intenso, elegante y moderno, ideal para dejar una huella inolvidable.
+                                <p>(HOMBRE)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>French Avenue Ghost Spectre</h3>
+                    <p>$95.000</p>
+                    <a href="#contacto" class="boton-secundario">
+                       ENCARGAR
+                    </a>
+                </article>
+
+                <article class="producto">
+                    <div class="producto-visual" tabindex="0" aria-label="Fragancia unisex versátil, para acompañar distintos momentos del día.">
+                        <div class="producto-giro">
+                            <div class="producto-imagen imagen-5" aria-hidden="true"></div>
+                            <div class="producto-reverso" aria-hidden="true">
+                                <h3>Emeer</h3>
+                                <p>Eau de Parfum - 100ml</p> <br>Para quienes buscan un aroma sofisticado, fresco y amaderado, con un toque especiado que transmite elegancia y distinción.
+                                <p>(HOMBRE-UNISEX)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Lattafa Emeer</h3>
+                    <p>$100.000</p>
+                    <a href="#contacto" class="boton-secundario">
+                       ENCARGAR
+                    </a>
+                </article>
+
+                
+
+                <article class="producto">
+                    <div class="producto-visual" tabindex="0" aria-label="French Avenue Liquid Brun Eau de Parfum, 100 ml. Una fragancia con personalidad.">
+                        <div class="producto-giro">
+                            <div class="producto-imagen imagen-6" aria-hidden="true"></div>
+                            <div class="producto-reverso" aria-hidden="true">
+                                <h3>9PM Elixir</h3>
+                                <p> Extrait de Parfum - 100 ml <p> <br>Para quienes buscan un aroma intenso, dulce y seductor, ideal para destacar en salidas nocturnas con un toque de elegancia y misterio.
+                                    <p>(HOMBRE-UNISEX)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Afnan 9PM Elixir</h3>
+                    <p>$90.000</p>
+                    <a href="#contacto" class="boton-secundario">
+                        ENCARGAR
+                    </a>
+                </article>
+
+                <article class="producto">
+                    <div class="producto-visual" tabindex="0" aria-label="Fragancia unisex versátil, para acompañar distintos momentos del día.">
+                        <div class="producto-giro">
+                            <div class="producto-imagen imagen-7" aria-hidden="true"></div>
+                            <div class="producto-reverso" aria-hidden="true">
+                                <h3>Amber Oud Gold Edition</h3>
+                                <p>Eau de Parfum - 120 ml</p> <br>Para quienes buscan un aroma dulce, cálido y envolvente, con un toque elegante y sofisticado ideal para destacar en cualquier ocasión.
+                                <p>(UNISEX)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3> Al Haramain Amber Oud Gold Edition</h3>
+                    <p>$120.000</p>
+                    <a href="#contacto" class="boton-secundario">
+                       ENCARGAR
+                    </a>
+                </article>
+
+                <article class="producto">
+                    <div class="producto-visual" tabindex="0" aria-label="Fragancia unisex versátil, para acompañar distintos momentos del día.">
+                        <div class="producto-giro">
+                            <div class="producto-imagen imagen-8" aria-hidden="true"></div>
+                            <div class="producto-reverso" aria-hidden="true">
+                                <h3>Hawas Fire</h3>
+                                <p>Eau de Parfum - 100 ml</p> <br>Para quienes buscan un aroma intenso, cálido y especiado, con un toque dulce y vibrante ideal para destacar con personalidad.
+                                <p>(HOMBRE)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Rasasi Hawas Fire</h3>
+                    <p>$92.000</p>
+                    <a href="#contacto" class="boton-secundario">
+                       ENCARGAR
+                    </a>
+                </article>
+
+                 <article class="producto">
+                    <div class="producto-visual" tabindex="0" aria-label="Fragancia unisex versátil, para acompañar distintos momentos del día.">
+                        <div class="producto-giro">
+                            <div class="producto-imagen imagen-9" aria-hidden="true"></div>
+                            <div class="producto-reverso" aria-hidden="true">
+                                <h3>Bharara King</h3>
+                                <p>Eau de Parfum - 100 ml</p> <br>Para quienes buscan un aroma dulce, frutal e intenso, con un toque cítrico y sofisticado que transmite energía y elegancia.
+                                <p>(HOMBRE-UNISEX)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3> Bharara King</h3>
+                    <p>$120.000</p>
+                    <a href="#contacto" class="boton-secundario">
+                       ENCARGAR
+                    </a>
+                </article>
+
+                <article class="producto">
+                    <div class="producto-visual" tabindex="0" aria-label="Fragancia unisex versátil, para acompañar distintos momentos del día.">
+                        <div class="producto-giro">
+                            <div class="producto-imagen imagen-10" aria-hidden="true"></div>
+                            <div class="producto-reverso" aria-hidden="true">
+                                <h3>Philos Pura</h3>
+                                <p>Eau de Parfum - 100 ml</p> <br>Para quienes buscan un aroma fresco, dulce y elegante, con un toque frutal y sofisticado ideal para acompañar cualquier ocasión.
+                                <p>(UNISEX)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Maison Alhambra Philos Pura</h3>
+                    <p>$70.000</p>
+                    <a href="#contacto" class="boton-secundario">
+                       ENCARGAR
+                    </a>
+                </article>
+
+                 <article class="producto">
+                    <div class="producto-visual" tabindex="0" aria-label="Fragancia unisex versátil, para acompañar distintos momentos del día.">
+                        <div class="producto-giro">
+                            <div class="producto-imagen imagen-11" aria-hidden="true"></div>
+                            <div class="producto-reverso" aria-hidden="true">
+                                <h3>Eclaire</h3>
+                                <p>Eau de Parfum - 100 ml</p> <br>Para quienes buscan un aroma dulce, cremoso y gourmand, con notas de caramelo, leche y vainilla que envuelven los sentidos y transmiten calidez y dulzura.
+                                <p>(MUJER)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Lattafa Eclaire</h3>
+                    <p>$80.000</p>
+                    <a href="#contacto" class="boton-secundario">
+                       ENCARGAR
+                    </a>
+                </article>
+
+
+                <article class="producto">
+                    <div class="producto-visual" tabindex="0" aria-label="Fragancia unisex versátil, para acompañar distintos momentos del día.">
+                        <div class="producto-giro">
+                            <div class="producto-imagen imagen-12" aria-hidden="true"></div>
+                            <div class="producto-reverso" aria-hidden="true">
+                                <h3>Asad Bourbon</h3>
+                                <p>Eau de Parfum - 100 ml</p> <br>Para quienes buscan un aroma dulce chocolatoso, cálido y especiado, con notas de vainilla y ámbar que transmiten elegancia y carácter, ideal para destacar en las noches más especiales.
+                                <p>(HOMBRE-UNISEX)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3> Lattafa Asad Bourbon</h3>
+                    <p>$80.000</p>
+                    <a href="#contacto" class="boton-secundario">
+                       ENCARGAR
+                    </a>
+                </article>
+
+
+
+                </div>
+            </div>
+
+            <h3 class="titulo-categoria">DISEÑADOR</h3>
+            <div class="productos-carrusel" role="region" aria-label="Carrusel de perfumes de diseñador">
+                <div class="carrusel-controles">
+                    <button class="carrusel-boton carrusel-anterior"
+                            type="button"
+                            aria-label="Ver perfumes anteriores de diseñador"
+                            aria-controls="productos-secundarios"
+                            disabled>
+                        ←
+                    </button>
+                    <button class="carrusel-boton carrusel-siguiente"
+                            type="button"
+                            aria-label="Ver más perfumes de diseñador"
+                            aria-controls="productos-secundarios"
+                            disabled>
+                        →
+                    </button>
+                </div>
+                <div class="productos" id="productos-secundarios" tabindex="0" aria-label="Perfumes de diseñador">
+                    <article class="producto">
+                        <div class="producto-visual" tabindex="0" aria-label="9PM Night Out. Fragancia intensa y envolvente, ideal para salidas y ocasiones especiales.">
+                            <div class="producto-giro">
+                                <div class="producto-imagen imagen-disenador-1" aria-hidden="true"></div>
+                                <div class="producto-reverso" aria-hidden="true">
+                                    <h3>Le Male Elixir</h3>
+                                    <p>Extrait de Parfum - 125ml<p> <br>Para quienes buscan una fragancia dulce amielada intensa y envolvente, ideal para salidas y ocasiones especiales.
+                                        <p>(HOMBRE)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h3>Jean Paul Galtier Le Male Elixir</h3>
+                        <p>$220.000</p>
+                        <a href="#contacto" class="boton-secundario">ENCARGAR</a>
+                    </article>
+
+                    <article class="producto">
+                        <div class="producto-visual" tabindex="0" aria-label="French Avenue Liquid Brun Eau de Parfum, 100 ml. Una fragancia con personalidad.">
+                            <div class="producto-giro">
+                                <div class="producto-imagen imagen-disenador-2" aria-hidden="true"></div>
+                                <div class="producto-reverso" aria-hidden="true">
+                                    <h3>Uomo Born In Roma Intense</h3>
+                                    <p> Eau de Parfum - 100ml</p> <br> una fragancia para quienes buscan un aroma intenso, dulce y ambarado, con notas cálidas de vainilla que transmiten sensualidad y elegancia, ideal para la noche.
+                                    <p>(HOMBRE)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h3>Valentino Uomo Born In Roma Intense</h3>
+                        <p>$360.000</p>
+                        <a href="#contacto" class="boton-secundario">ENCARGAR</a>
+                    </article>
+
+                    <article class="producto">
+                        <div class="producto-visual" tabindex="0" aria-label="Afnan Supremacy Collector's Edition Eau de Parfum de 100 ml.">
+                            <div class="producto-giro">
+                                <div class="producto-imagen imagen-disenador-3" aria-hidden="true"></div>
+                                <div class="producto-reverso" aria-hidden="true">
+                                    <h3>Sauvage Parfum</h3>
+                                    <p>Parfum - 100 ml</p> <br>Para quienes buscan un aroma intenso, fresco y amaderado, con notas de ámbar y especias que transmiten elegancia y carácter en cualquier ocasión.
+                                    <p>(HOMBRE)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h3>Dior Sauvage Parfum</h3>
+                        <p>$350.000</p>
+                        <a href="#contacto" class="boton-secundario">ENCARGAR</a>
+                    </article>
+
+                    <article class="producto">
+                        <div class="producto-visual" tabindex="0" aria-label="Ghost Spectre, una fragancia versátil para compartir.">
+                            <div class="producto-giro">
+                                <div class="producto-imagen imagen-disenador-4" aria-hidden="true"></div>
+                                <div class="producto-reverso" aria-hidden="true">
+                                    <h3>Versace Eros</h3>
+                                    <p>Eau de Parfum - 100 ml</p> <br>Para quienes buscan un aroma dulce, fresco y seductor, con notas de menta, manzana verde y vainilla que transmiten energía y confianza.
+                                    <p>(HOMBRE-UNISEX)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h3>Versace Eros</h3>
+                        <p>$190.000</p>
+                        <a href="#contacto" class="boton-secundario">ENCARGAR</a>
+                    </article>
+
+                    <article class="producto">
+                        <div class="producto-visual" tabindex="0" aria-label="Emeer Lattafa Eau de Parfum.">
+                            <div class="producto-giro">
+                                <div class="producto-imagen imagen-disenador-5" aria-hidden="true"></div>
+                                <div class="producto-reverso" aria-hidden="true">
+                                    <h3>Invictus Victory Elixir</h3>
+                                    <p>Eau de Parfum - 100 ml</p> <br>Para quienes buscan un aroma intenso, dulce y envolvente, con notas de vainilla y ámbar que transmiten fuerza, sensualidad y sofisticación.
+                                    <p>(HOMBRE)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h3>Rabanne Invictus Victory Elixir </h3>
+                        <p>$225.000</p>
+                        <a href="#contacto" class="boton-secundario">ENCARGAR</a>
+                    </article>
+
+                    <article class="producto">
+                        <div class="producto-visual" tabindex="0" aria-label="9PM Elixir, una fragancia intensa y envolvente.">
+                            <div class="producto-giro">
+                                <div class="producto-imagen imagen-disenador-6" aria-hidden="true"></div>
+                                <div class="producto-reverso" aria-hidden="true">
+                                    <h3>Acqua Di Gio Profondo</h3>
+                                    <p>Eau de Parfum - 100 ml</p> <br>Para quienes buscan un aroma fresco, acuático y amaderado, con notas marinas y cítricas que transmiten limpieza, elegancia y sofisticación.
+                                    <p>(HOMBRE)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h3>Giorgio Armani Acqua Di Gio Profondo</h3>
+                        <p>$320.000</p>
+                        <a href="#contacto" class="boton-secundario">ENCARGAR</a>
+                    </article>
+
+                    <article class="producto">
+                        <div class="producto-visual" tabindex="0" aria-label="Al Haramain Gold Edition, una fragancia versátil.">
+                            <div class="producto-giro">
+                                <div class="producto-imagen imagen-disenador-7" aria-hidden="true"></div>
+                                <div class="producto-reverso" aria-hidden="true">
+                                    <h3>Le Male Le Parfum</h3>
+                                    <p>Eau de Parfum intense - 125ml</p> <br>Para quienes buscan un aroma intenso, cálido y elegante, con notas de vainilla, lavanda y especias que transmiten sofisticación y sensualidad, ideal para la noche.
+                                     <p>(HOMBRE)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h3>Jean Paul Galtier Le Male Le Parfum</h3>
+                        <p>$225.000</p>
+                        <a href="#contacto" class="boton-secundario">ENCARGAR</a>
+                    </article>
+
+                    <article class="producto">
+                        <div class="producto-visual" tabindex="0" aria-label="Hawas Fire, una fragancia versátil.">
+                            <div class="producto-giro">
+                                <div class="producto-imagen imagen-disenador-8" aria-hidden="true"></div>
+                                <div class="producto-reverso" aria-hidden="true">
+                                    <h3>Stronger With You Intensely</h3>
+                                    <p>Eau de Parfum - 100ml</p> <br>Para quienes buscan un aroma dulce, intenso y envolvente, con notas de vainilla, ámbar y canela que transmiten calidez, sensualidad y elegancia, ideal para la noche.
+                                     <p>(HOMBRE)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h3>Giorgio Emporio Armani Stronger With You Intensely</h3>
+                        <p>$215.000</p>
+                        <a href="#contacto" class="boton-secundario">ENCARGAR</a>
+                    </article>
+
+                    <article class="producto">
+                        <div class="producto-visual" tabindex="0" aria-label="Khamrah Dukhan, una fragancia versátil.">
+                            <div class="producto-giro">
+                                <div class="producto-imagen imagen-disenador-9" aria-hidden="true"></div>
+                                <div class="producto-reverso" aria-hidden="true">
+                                    <h3>Scandal Pour Homme </h3>
+                                    <p>Eau De Toilette - 150ml</p> <br>Para quienes buscan un aroma dulce, intenso y atrevido, con notas de caramelo, haba tonka y salvia que transmiten confianza, sensualidad y personalidad.
+                                <p>(HOMBRE)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h3>JEAN PAUL GAULTIER Scandal Pour Homme </h3>
+                        <p>$350.000</p>
+                        <a href="#contacto" class="boton-secundario">ENCARGAR</a>
+                    </article>
+
+                     <article class="producto">
+                        <div class="producto-visual" tabindex="0" aria-label="Khamrah Dukhan, una fragancia versátil.">
+                            <div class="producto-giro">
+                                <div class="producto-imagen imagen-disenador-10" aria-hidden="true"></div>
+                                <div class="producto-reverso" aria-hidden="true">
+                                    <h3>Azzaro Wanted Forever Elixir </h3>
+                                    <p>Eau De Parfum - 100ml</p> <br>Para quienes buscan un aroma intenso, dulce y amaderado, con notas cálidas y especiadas que transmiten masculinidad, sofisticación y una presencia irresistible.
+                                <p>(HOMBRE)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h3>Azzaro Wanted Forever Elixir</h3>
+                        <p>$230.000</p>
+                        <a href="#contacto" class="boton-secundario">ENCARGAR</a>
+                    </article>
+
+                    <article class="producto">
+                        <div class="producto-visual" tabindex="0" aria-label="Khamrah Dukhan, una fragancia versátil.">
+                            <div class="producto-giro">
+                                <div class="producto-imagen imagen-disenador-11" aria-hidden="true"></div>
+                                <div class="producto-reverso" aria-hidden="true">
+                                    <h3>HUGO BOSS Bottled</h3>
+                                    <p>Eau De Toilette - 50ml</p> <br>Para quienes buscan un aroma fresco, frutal y amaderado, con notas de manzana, canela y vainilla que transmiten elegancia y calidez, ideal para el día a día.
+                                <p>(HOMBRE)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h3> HUGO BOSS Bottled </h3>
+                        <p>$200.000</p>
+                        <a href="#contacto" class="boton-secundario">ENCARGAR</a>
+                    </article>
+
+                      <article class="producto">
+                        <div class="producto-visual" tabindex="0" aria-label="Khamrah Dukhan, una fragancia versátil.">
+                            <div class="producto-giro">
+                                <div class="producto-imagen imagen-disenador-12" aria-hidden="true"></div>
+                                <div class="producto-reverso" aria-hidden="true">
+                                    <h3>Bad Boy</h3>
+                                    <p>Eau De Toilette - 100ml</p> <br>Para quienes buscan un aroma intenso, especiado y seductor, con notas de pimienta, cacao y haba tonka que transmiten misterio, elegancia y personalidad.
+                                <p>(HOMBRE)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h3>Carolina Herrera Bad Boy </h3>
+                        <p>$200.000</p>
+                        <a href="#contacto" class="boton-secundario">ENCARGAR</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+         
+
+     <!-- NOSOTROS -->
+        <section class="nosotros seccion" id="nosotros">
+            <p class="subtitulo">EL MUNDO ESSENZA</p>
+            <h2>Más que un perfume, una identidad.</h2>
+            <p>
+                En Essenza Parfums creemos que cada fragancia cuenta
+                una historia. Descubrí aromas que acompañan tus
+                momentos y reflejan tu personalidad.
+            </p>
+        </section>
+
+
+        <!-- CONTACTO -->
+        <section class="contacto seccion" id="contacto">
+            <p class="subtitulo">ESTAMOS PARA AYUDARTE</p>
+            <h2>Encontrá tu próxima fragancia</h2>
+            <p>Escribinos y te ayudamos a elegir tu perfume ideal.</p>
+
+            <div class="contacto-botones">
+                <a class="boton-contacto whatsapp"
+                   href="https://wa.me/5493562511971?
+                   text=%C2%A1Hola!%20%F0%9F%91%8B%20Bienvenido%2Fa%20a%20Essenza%20Parfums%20%E2%9C%A8%0A%0A%C2%BFEn%20qu%C3%A9%20podemos%20ayudarte%20hoy%3F%20%F0%9F%98%8A%0A%0A%F0%9F%92%AC%20Pod%C3%A9s%20consultarnos%20por%20disponibilidad%2C%20precios%20y%20pr%C3%B3ximos%20ingresos.%20%C2%A1Estamos%20para%20asesorarte!"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    CONSULTAR POR WHATSAPP
+                </a>
+
+                <a class="boton-contacto instagram"
+                   href="https://www.instagram.com/essenza.parfum__/"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    VISITAR INSTAGRAM
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- PIE DE PÁGINA -->
+    <footer>
+        <img src="IMG/LOGO-ESSENZA-2.png" alt="Essenza Parfums">
+        <p>Fragancias que dejan huella.</p>
+        <p class="copyright">
+            © 2026 Essenza Parfums. Todos los derechos reservados.
+        </p>
+    </footer>
+
+</body>
+</html>
